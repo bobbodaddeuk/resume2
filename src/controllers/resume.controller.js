@@ -7,8 +7,12 @@ export class ResumeController {
         try {
             const user = res.locals.user
             const { title, content } = req.body
-            await this.resumeService.createResume({ user, title, content })
-            res.status(201).end()
+            const resume = await this.resumeService.createResume({
+                user,
+                title,
+                content,
+            })
+            res.status(201).json({ data: resume })
         } catch (error) {
             res.status(400).json({ success: false, message: error.message })
         }

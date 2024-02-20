@@ -35,4 +35,15 @@ export class ResumeController {
                 .json({ success: false, message: error.message })
         }
     }
+    getResumeById = async (req, res) => {
+        try {
+            const { resumeId } = req.params
+
+            const resume = await this.resumeService.findResumeById(resumeId)
+
+            return res.status(200).json({ data: resume })
+        } catch (error) {
+            res.status(400).json({ success: false, message: error.message })
+        }
+    }
 }

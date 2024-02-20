@@ -16,9 +16,9 @@ router.post('/resume', jwtValidate, resumeController.createResume)
 // 이력서 조회 API
 router.get('/resume', resumeController.getResumes)
 // 이력서 상세 조회 API
-router.get('/resume/:resumeId', resumeController.getResume)
+router.get('/resume/:resumeId', resumeController.getResumeById)
 // 이력서 수정 API
-
+router.patch('/resume/:resumeId', jwtValidate, resumeController.updateResume)
 // 이력서 삭제 API
 
 export default router

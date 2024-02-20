@@ -36,4 +36,10 @@ export class ResumeRepository {
 
         return resumes
     }
+    findResumeById = async (resumeId) => {
+        const resume = await this.prisma.resume.findFirst({
+            where: { resumeId: +resumeId },
+        })
+        return resume
+    }
 }

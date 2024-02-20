@@ -32,4 +32,15 @@ export class ResumeService {
 
         return resumes
     }
+    findResumeById = async (postId) => {
+        const resume = await this.resumeRepository.findResumeById(postId)
+
+        return {
+            resumeId: resume.resumeId,
+            title: resume.title,
+            content: resume.content,
+            status: resume.status,
+            name: resume.name,
+        }
+    }
 }

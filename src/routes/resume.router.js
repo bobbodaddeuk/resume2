@@ -20,5 +20,5 @@ router.get('/resume/:resumeId', resumeController.getResumeById)
 // 이력서 수정 API
 router.patch('/resume/:resumeId', jwtValidate, resumeController.updateResume)
 // 이력서 삭제 API
-
+// router.delete('/resume/:resumeId', jwtValidate, resumeController.deleteResume)
 export default router

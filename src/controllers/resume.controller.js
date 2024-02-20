@@ -46,4 +46,22 @@ export class ResumeController {
             res.status(400).json({ success: false, message: error.message })
         }
     }
+    updateResume = async (req, res) => {
+        try {
+            const user = res.locals.user
+            const { resumeId } = req.params
+            const { title, content, status } = req.body
+
+            const updatedResume = await this.resumeService.updateResume({
+                resumeId,
+                title,
+                content,
+                status,
+            })
+
+            return res.status(201).json({ data: updatedResume })
+        } catch (error) {
+            res.status(400).json({ success: false, message: error.message })
+        }
+    }
 }

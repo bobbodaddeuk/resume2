@@ -1,25 +1,25 @@
-const express = require('express');
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
-const jwtwebToken = require('jsonwebtoken');
-const jwtValidate = require('../middleware/jwt-validate.middleware');
-const router = express.Router();
+const express = require('express')
+const { PrismaClient } = require('@prisma/client')
+const prisma = new PrismaClient()
+const jwtwebToken = require('jsonwebtoken')
+const jwtValidate = require('../middleware/jwt-validate.middleware')
+const router = express.Router()
 
 router.get('/', async (req, res) => {
-    const orderKey = req.query.orderKey ?? 'resumeId';
-    const orderValue = req.query.orderValue ?? 'desc';
+    const orderKey = req.query.orderKey ?? 'resumeId'
+    const orderValue = req.query.orderValue ?? 'desc'
 
     if (!['resumeId', 'status'].includes(orderKey)) {
         return res.status(400).json({
             success: false,
-            message: 'orderKey 가 올바르지 않습니다.'
+            message: 'orderKey 가 올바르지 않습니다.',
         })
     }
 
     if (!['asc', 'desc'].includes(orderValue.toLowerCase())) {
         return res.status(400).json({
             success: false,
-            message: 'orderValue 가 올바르지 않습니다.'
+            message: 'orderValue 가 올바르지 않습니다.',
         })
     }
 
@@ -32,26 +32,26 @@ router.get('/', async (req, res) => {
             user: {
                 select: {
                     name: true,
-                }
+                },
             },
             createdAt: true,
         },
         orderBy: [
             {
                 [orderKey]: orderValue.toLowerCase(),
-            }
-        ]
+            },
+        ],
     })
 
-    return res.json({ data: resumes });
+    return res.json({ data: resumes })
 })
 
 router.get('/:resumeId', async (req, res) => {
-    const resumeId = req.params.resumeId;
+    const resumeId = req.params.resumeId
     if (!resumeId) {
         return res.status(400).json({
             success: false,
-            message: 'resumeId는 필수값입니다.'
+            message: 'resumeId는 필수값입니다.',
         })
     }
 
@@ -67,33 +67,33 @@ router.get('/:resumeId', async (req, res) => {
             user: {
                 select: {
                     name: true,
-                }
+                },
             },
             createdAt: true,
         },
     })
 
     if (!resume) {
-        return res.json({ data: {} });
+        return res.json({ data: {} })
     }
 
-    return res.json({ data: resume });
+    return res.json({ data: resume })
 })
 
 router.post('/', jwtValidate, async (req, res) => {
-    const user = res.locals.user;
-    const { title, content } = req.body;
+    const user = res.locals.user
+    const { title, content } = req.body
     if (!title) {
         return res.status(400).json({
             success: false,
-            message: '이력서 제목은 필수값 입니다'
+            message: '이력서 제목은 필수값 입니다',
         })
     }
 
     if (!content) {
         return res.status(400).json({
             success: false,
-            message: '자기소개는 필수값 입니다'
+            message: '자기소개는 필수값 입니다',
         })
     }
 
@@ -103,16 +103,16 @@ router.post('/', jwtValidate, async (req, res) => {
             content,
             status: 'APPLY',
             userId: user.userId,
-        }
+        },
     })
 
-    return res.status(201).end();
+    return res.status(201).end()
 })
 
 router.patch('/:resumeId', jwtValidate, async (req, res) => {
-    const user = res.locals.user;
-    const resumeId = req.params.resumeId;
-    const { title, content, status } = req.body;
+    const user = res.locals.user
+    const resumeId = req.params.resumeId
+    const { title, content, status } = req.body
 
     if (!resumeId) {
         return res.status(400).json({
@@ -143,7 +143,16 @@ router.patch('/:resumeId', jwtValidate, async (req, res) => {
     }
 
     // status 는 존재
-    if (!['APPLY', 'DROP', 'PASS', 'INTERVIEW1', 'INTERVIEW2', 'FINAL_PASS'].includes(status)) {
+    if (
+        ![
+            'APPLY',
+            'DROP',
+            'PASS',
+            'INTERVIEW1',
+            'INTERVIEW2',
+            'FINAL_PASS',
+        ].includes(status)
+    ) {
         return res.status(400).json({
             success: false,
             message: '올바르지 않은 상태값 입니다.',
@@ -153,8 +162,8 @@ router.patch('/:resumeId', jwtValidate, async (req, res) => {
     const resume = await prisma.resume.findFirst({
         where: {
             resumeId: Number(resumeId),
-        }
-    });
+        },
+    })
 
     if (!resume) {
         return res.status(400).json({
@@ -178,16 +187,16 @@ router.patch('/:resumeId', jwtValidate, async (req, res) => {
         data: {
             title,
             content,
-            status
-        }
+            status,
+        },
     })
 
     return res.status(201).end()
 })
 
 router.delete('/:resumeId', jwtValidate, async (req, res) => {
-    const user = res.locals.user;
-    const resumeId = req.params.resumeId;
+    const user = res.locals.user
+    const resumeId = req.params.resumeId
 
     if (!resumeId) {
         return res.status(400).json({
@@ -199,8 +208,8 @@ router.delete('/:resumeId', jwtValidate, async (req, res) => {
     const resume = await prisma.resume.findFirst({
         where: {
             resumeId: Number(resumeId),
-        }
-    });
+        },
+    })
 
     if (!resume) {
         return res.status(400).json({
@@ -222,7 +231,7 @@ router.delete('/:resumeId', jwtValidate, async (req, res) => {
         },
     })
 
-    return res.status(201).end();
+    return res.status(201).end()
 })
 
-module.exports = router;
+module.exports = router

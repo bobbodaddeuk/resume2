@@ -32,9 +32,11 @@ export class ResumeService {
 
         return resumes
     }
-    findResumeById = async (postId) => {
-        const resume = await this.resumeRepository.findResumeById(postId)
-
+    findResumeById = async (resumeId) => {
+        const resume = await this.resumeRepository.findResumeById(resumeId)
+        if (!resume) {
+            throw new Error('이력서가 존재하지 않습니다.')
+        }
         return {
             resumeId: resume.resumeId,
             title: resume.title,
@@ -74,14 +76,25 @@ export class ResumeService {
         if (!resume) {
             throw new Error('존재하지 않는 이력서 입니다.')
         }
-
-        // 이력서 업데이트
-        return await this.resumeRepository.updateResume({
+        const updatedResume = await this.resumeRepository.updateResume({
             resumeId,
             user,
             title,
             content,
             status,
         })
+        return updatedResume
+    }
+    deleteResume = async (user, resumeId) => {
+        const resume = await this.resumeRepository.findResumeById(resumeId)
+        if (!resume) {
+            throw new Error('존재하지 않는 이력서 입니다.')
+        }
+        if (resume.userId !== user.userId) {
+            throw new Error('올바르지 않은 요청입니다.')
+        }
+        const deletedResume = await this.resumeRepository.deleteResume(resumeId)
+
+        return deletedResume
     }
 }

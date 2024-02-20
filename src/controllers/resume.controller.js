@@ -43,7 +43,9 @@ export class ResumeController {
 
             return res.status(200).json({ data: resume })
         } catch (error) {
-            res.status(400).json({ success: false, message: error.message })
+            return res
+                .status(400)
+                .json({ success: false, message: error.message })
         }
     }
     updateResume = async (req, res) => {
@@ -61,7 +63,26 @@ export class ResumeController {
 
             return res.status(201).json({ data: updatedResume })
         } catch (error) {
-            res.status(400).json({ success: false, message: error.message })
+            return res
+                .status(400)
+                .json({ success: false, message: error.message })
+        }
+    }
+    deleteResume = async (req, res) => {
+        try {
+            const user = res.locals.user
+            const { resumeId } = req.params
+
+            const deletedResume = await this.resumeService.deleteResume(
+                user,
+                resumeId
+            )
+
+            return res.status(201).json({ message: '이력서가 삭제되었습니다.' })
+        } catch (error) {
+            return res
+                .status(400)
+                .json({ success: false, message: error.message })
         }
     }
 }

@@ -14,9 +14,9 @@ const router = express.Router()
 // 이력서 작성 API
 router.post('/resume', jwtValidate, resumeController.createResume)
 // 이력서 조회 API
-
+router.get('/resume', resumeController.getResumes)
 // 이력서 상세 조회 API
-
+router.get('/resume/:resumeId', resumeController.getResume)
 // 이력서 수정 API
 
 // 이력서 삭제 API

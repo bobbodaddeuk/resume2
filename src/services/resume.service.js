@@ -11,10 +11,25 @@ export class ResumeService {
             throw new Error('자기소개는 필수값 입니다')
         }
 
-        return await this.resumeRepository.createResume({
+        const resume = await this.resumeRepository.createResume({
             title,
             content,
             userId: user.userId,
         })
+        return resume
+    }
+    findAllResumes = async ({ orderKey, orderValue }) => {
+        if (!['resumeId', 'status'].includes(orderKey)) {
+            throw new Error('orderKey 가 올바르지 않습니다.')
+        }
+        if (!['asc', 'desc'].includes(orderValue.toLowerCase())) {
+            throw new Error('orderValue 가 올바르지 않습니다.')
+        }
+        const resumes = await this.resumeRepository.findAllResumes({
+            orderKey,
+            orderValue,
+        })
+
+        return resumes
     }
 }

@@ -5,9 +5,11 @@ export class UserController {
     signUp = async (req, res) => {
         try {
             const result = await this.userService.signUp(req.body)
-            res.status(201).json(result)
+            return res.status(201).json(result)
         } catch (error) {
-            res.status(400).json({ success: false, message: error.message })
+            return res
+                .status(400)
+                .json({ success: false, message: error.message })
         }
     }
 }

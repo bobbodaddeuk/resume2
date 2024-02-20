@@ -3,7 +3,7 @@ export class ResumeRepository {
         this.prisma = prisma
     }
     createResume = async ({ title, content, userId }) => {
-        return await this.prisma.resume.create({
+        const resume = await this.prisma.resume.create({
             data: {
                 title,
                 content,
@@ -11,5 +11,29 @@ export class ResumeRepository {
                 userId,
             },
         })
+        return resume
+    }
+    findAllResumes = async ({ orderKey, orderValue }) => {
+        const resumes = await this.prisma.resume.findMany({
+            select: {
+                resumeId: true,
+                title: true,
+                content: true,
+                status: true,
+                user: {
+                    select: {
+                        name: true,
+                    },
+                },
+                createdAt: true,
+            },
+            orderBy: [
+                {
+                    [orderKey]: orderValue.toLowerCase(),
+                },
+            ],
+        })
+
+        return resumes
     }
 }

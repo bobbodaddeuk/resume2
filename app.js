@@ -1,22 +1,17 @@
-const express = require('express')
-const bodyParser = require('body-parser');
+import express from 'express'
+import bodyParser from 'body-parser'
 
-const swaggerJsdoc = require('swagger-jsdoc')
-const swaggerUi = require('swagger-ui-express')
+import swaggerJsdoc from 'swagger-jsdoc'
+import swaggerUi from 'swagger-ui-express'
 
-const authRouter = require('./routers/auth.router');
-const userRouter = require('./routers/user.router');
-const resumeRouter = require('./routers/resume.router');
+import userRouter from './src/routes/user.router.js'
+import resumeRouter from './src/routes/resume.router.js'
 
 const app = express()
-const port = 3000
+const port = process.env.PORT
 
-
-app.use(bodyParser.json());
-
-app.use('/auth', authRouter);
-app.use('/users', userRouter);
-app.use('/resumes', resumeRouter);
+app.use(bodyParser.json())
+app.use('/api', userRouter, resumeRouter)
 
 const options = {
     swaggerDefinition: {
@@ -32,7 +27,6 @@ const options = {
 
 const specs = swaggerJsdoc(options)
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs))
-
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)

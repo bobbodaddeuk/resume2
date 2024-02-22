@@ -26,7 +26,7 @@ describe('Resume service Unit Test', () => {
         mockResumeRepository.createResume.mockReturnValue(sampleResume)
 
         const createdResume = await resumeService.createResume({
-            user: user, // 'user' 객체를 전달
+            user: user, 
             title: 'title',
             content: 'content',
         })
